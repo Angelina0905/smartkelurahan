@@ -22,10 +22,6 @@ db.connect(() => {
     console.log('RDS Connected');
 });
 
-app.get('/', (req, res) => {
-    res.send('SmartKelurahan Backend Jalan');
-});
-
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
