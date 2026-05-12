@@ -115,7 +115,7 @@ app.get('/pengaduan', (req, res) => {
 // FRONTEND
 // =======================
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
