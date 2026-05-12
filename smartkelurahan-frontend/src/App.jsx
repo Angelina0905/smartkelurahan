@@ -1,121 +1,148 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import axios from 'axios'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  // PENGAJUAN
+  const [nama, setNama] = useState('')
+  const [jenis, setJenis] = useState('')
+  const [file, setFile] = useState(null)
+
+  // PENGADUAN
+  const [judul, setJudul] = useState('')
+  const [deskripsi, setDeskripsi] = useState('')
+  const [foto, setFoto] = useState(null)
+
+  // API BACKEND
+  const API_URL = 'http://15.135.240.111:5000'
+
+  // SUBMIT PENGAJUAN
+  const submitPengajuan = async (e) => {
+
+    e.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('nama', nama)
+    formData.append('jenis', jenis)
+    formData.append('file', file)
+
+    try {
+
+      await axios.post(
+        `${API_URL}/pengajuan`,
+        formData
+      )
+
+      alert('Pengajuan berhasil')
+
+    } catch (error) {
+
+      console.log(error)
+
+      alert('Pengajuan gagal')
+    }
+  }
+
+  // SUBMIT PENGADUAN
+  const submitPengaduan = async (e) => {
+
+    e.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('judul', judul)
+    formData.append('deskripsi', deskripsi)
+    formData.append('foto', foto)
+
+    try {
+
+      await axios.post(
+        `${API_URL}/pengaduan`,
+        formData
+      )
+
+      alert('Pengaduan berhasil')
+
+    } catch (error) {
+
+      console.log(error)
+
+      alert('Pengaduan gagal')
+    }
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
+    <div className="container">
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <h1>SmartKelurahan</h1>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      {/* FORM PENGAJUAN */}
+      <div className="card">
+
+        <h2>Pengajuan Surat</h2>
+
+        <form onSubmit={submitPengajuan}>
+
+          <input
+            type="text"
+            placeholder="Nama"
+            onChange={(e) => setNama(e.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Jenis Surat"
+            onChange={(e) => setJenis(e.target.value)}
+          />
+
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+
+          <button type="submit">
+            Kirim Pengajuan
+          </button>
+
+        </form>
+
+      </div>
+
+      {/* FORM PENGADUAN */}
+      <div className="card">
+
+        <h2>Pengaduan Masyarakat</h2>
+
+        <form onSubmit={submitPengaduan}>
+
+          <input
+            type="text"
+            placeholder="Judul Pengaduan"
+            onChange={(e) => setJudul(e.target.value)}
+          />
+
+          <textarea
+            placeholder="Deskripsi Pengaduan"
+            onChange={(e) => setDeskripsi(e.target.value)}
+          />
+
+          <input
+            type="file"
+            onChange={(e) => setFoto(e.target.files[0])}
+          />
+
+          <button type="submit">
+            Kirim Pengaduan
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
   )
 }
 
