@@ -3,10 +3,12 @@ const mysql = require('mysql2');
 const multer = require('multer');
 const AWS = require('aws-sdk');
 require('dotenv').config();
+const path = require('path');
 
 const app = express();
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'dist')))
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -26,3 +28,6 @@ app.get('/', (req, res) => {
 app.listen(5000, () => {
     console.log('Server running');
 });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
