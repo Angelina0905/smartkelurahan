@@ -1,144 +1,98 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
 
 function App() {
 
-  // PENGAJUAN
   const [nama, setNama] = useState('')
-  const [jenis, setJenis] = useState('')
+  const [deskripsi, setDeskripsi] = useState('')
   const [file, setFile] = useState(null)
 
-  // PENGADUAN
-  const [judul, setJudul] = useState('')
-  const [deskripsi, setDeskripsi] = useState('')
-  const [foto, setFoto] = useState(null)
+  const [data, setData] = useState([])
 
-  // API BACKEND
-  const API_URL = 'http://15.135.240.111:5000'
+  const fetchData = async () => {
 
-  // SUBMIT PENGAJUAN
-  const submitPengajuan = async (e) => {
+    const res = await axios.get('/pengaduan')
+
+    setData(res.data)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const handleSubmit = async (e) => {
 
     e.preventDefault()
 
     const formData = new FormData()
 
     formData.append('nama', nama)
-    formData.append('jenis', jenis)
+    formData.append('deskripsi', deskripsi)
     formData.append('file', file)
 
-    try {
+    await axios.post('/pengaduan', formData)
 
-      await axios.post(
-        `${API_URL}/pengajuan`,
-        formData
-      )
+    alert('Pengaduan berhasil dikirim')
 
-      alert('Pengajuan berhasil')
+    setNama('')
+    setDeskripsi('')
+    setFile(null)
 
-    } catch (error) {
-
-      console.log(error)
-
-      alert('Pengajuan gagal')
-    }
-  }
-
-  // SUBMIT PENGADUAN
-  const submitPengaduan = async (e) => {
-
-    e.preventDefault()
-
-    const formData = new FormData()
-
-    formData.append('judul', judul)
-    formData.append('deskripsi', deskripsi)
-    formData.append('foto', foto)
-
-    try {
-
-      await axios.post(
-        `${API_URL}/pengaduan`,
-        formData
-      )
-
-      alert('Pengaduan berhasil')
-
-    } catch (error) {
-
-      console.log(error)
-
-      alert('Pengaduan gagal')
-    }
+    fetchData()
   }
 
   return (
-
     <div className="container">
 
       <h1>SmartKelurahan</h1>
 
-      {/* FORM PENGAJUAN */}
-      <div className="card">
+      <form onSubmit={handleSubmit}>
 
-        <h2>Pengajuan Surat</h2>
+        <input
+          type="text"
+          placeholder="Nama"
+          value={nama}
+          onChange={(e) => setNama(e.target.value)}
+        />
 
-        <form onSubmit={submitPengajuan}>
+        <textarea
+          placeholder="Deskripsi"
+          value={deskripsi}
+          onChange={(e) => setDeskripsi(e.target.value)}
+        />
 
-          <input
-            type="text"
-            placeholder="Nama"
-            onChange={(e) => setNama(e.target.value)}
-          />
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
 
-          <input
-            type="text"
-            placeholder="Jenis Surat"
-            onChange={(e) => setJenis(e.target.value)}
-          />
+        <button type="submit">
+          Kirim
+        </button>
 
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+      </form>
 
-          <button type="submit">
-            Kirim Pengajuan
-          </button>
+      <div className="list">
 
-        </form>
+        {
+          data.map((item) => (
 
-      </div>
+            <div className="card" key={item.id}>
 
-      {/* FORM PENGADUAN */}
-      <div className="card">
+              <h3>{item.nama}</h3>
 
-        <h2>Pengaduan Masyarakat</h2>
+              <p>{item.deskripsi}</p>
 
-        <form onSubmit={submitPengaduan}>
+              <img
+                src={item.file_url}
+                alt=""
+                width="300"
+              />
 
-          <input
-            type="text"
-            placeholder="Judul Pengaduan"
-            onChange={(e) => setJudul(e.target.value)}
-          />
-
-          <textarea
-            placeholder="Deskripsi Pengaduan"
-            onChange={(e) => setDeskripsi(e.target.value)}
-          />
-
-          <input
-            type="file"
-            onChange={(e) => setFoto(e.target.files[0])}
-          />
-
-          <button type="submit">
-            Kirim Pengaduan
-          </button>
-
-        </form>
+            </div>
+          ))
+        }
 
       </div>
 
