@@ -29,4 +29,6 @@ jobs:
 
             docker build -t smartkelurahan-backend .
 
+            docker rm -f backend || true
+
             docker run -d -p 5000:5000 --name backend smartkelurahan-backend
